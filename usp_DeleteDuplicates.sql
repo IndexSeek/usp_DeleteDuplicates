@@ -58,8 +58,8 @@ MyDb.dbo.ExampleTable
 Now let''s run our procedure:
 
 EXECUTE dbo.usp_DeleteDuplicates @DatabaseName = N''MyDb'',
-								 @SchemaName = N''dbo'',
-								 @TableName = N''ExampleTable'';
+				 @SchemaName = N''dbo'',
+				 @TableName = N''ExampleTable'';
 
 We are now left with:
 
@@ -78,15 +78,15 @@ Parameter explanations:
 @WhatIf         0 = This is the default. This will remove the duplicates.
                 1 = Hypothetically removes the duplicate rows. Does not
                     actually perform the delete, but displays the rows
-					that would be affected.
+		    that would be affected.
 @WithUniques    0 = This is the default. This will check for enforced uniqueness.
                 1 = This will remove all duplicates excluding the unique columns.
 @DatabaseName	Which database is this table stored in? 
-					If NULL, this will use the current database context 
-					from where the procedure is being called.
-@SchemaName		Which schema does this database belong?
-					IF NULL, this will use the default schema of the caller.
-@TableName		The table in which you are attempting to remove duplicate 
+		If NULL, this will use the current database context 
+		from where the procedure is being called.
+@SchemaName	Which schema does this database belong?
+		IF NULL, this will use the default schema of the caller.
+@TableName	The table in which you are attempting to remove duplicate 
                 rows.
 
 MIT License
