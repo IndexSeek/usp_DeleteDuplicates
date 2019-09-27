@@ -56,8 +56,8 @@ MyDb.dbo.ExampleTable
 Now let''s run our procedure:
 
 EXECUTE dbo.usp_DeleteDuplicates @DatabaseName = N''MyDb'',
-								 @SchemaName = N''dbo'',
-								 @TableName = N''ExampleTable'';
+				 @SchemaName = N''dbo'',
+				 @TableName = N''ExampleTable'';
 
 We are now left with:
 
