@@ -22,9 +22,9 @@ CREATE PROCEDURE [dbo].[usp_DeleteDuplicates]
 	@Help bit = 0,
 	@WhatIf bit = 0,
 	@WithUniques bit = 0,
-    @DatabaseName sysname = NULL,
-    @SchemaName sysname = NULL,
-    @TableName sysname = NULL
+        @DatabaseName sysname = NULL,
+        @SchemaName sysname = NULL,
+        @TableName sysname = NULL
 AS
     BEGIN
 
