@@ -1,14 +1,12 @@
 IF OBJECT_ID(N'dbo.usp_DeleteDuplicates', N'P') IS NOT NULL
 	DROP PROCEDURE dbo.usp_DeleteDuplicates;
 
-/****** Object:  StoredProcedure [dbo].[usp_DeleteDuplicates]    Script Date: 9/26/2019 7:19:47 PM ******/
+/****** Object:  StoredProcedure [dbo].[usp_DeleteDuplicates] ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
-
 
 -- =========================================================================
 -- Author:                   Tyler White
@@ -22,9 +20,9 @@ CREATE PROCEDURE [dbo].[usp_DeleteDuplicates]
 	@Help bit = 0,
 	@WhatIf bit = 0,
 	@WithUniques bit = 0,
-        @DatabaseName sysname = NULL,
-        @SchemaName sysname = NULL,
-        @TableName sysname = NULL
+	@DatabaseName sysname = NULL,
+	@SchemaName sysname = NULL,
+	@TableName sysname = NULL
 AS
     BEGIN
 
@@ -58,8 +56,8 @@ MyDb.dbo.ExampleTable
 Now let''s run our procedure:
 
 EXECUTE dbo.usp_DeleteDuplicates @DatabaseName = N''MyDb'',
-				 @SchemaName = N''dbo'',
-				 @TableName = N''ExampleTable'';
+								 @SchemaName = N''dbo'',
+								 @TableName = N''ExampleTable'';
 
 We are now left with:
 
@@ -78,15 +76,15 @@ Parameter explanations:
 @WhatIf         0 = This is the default. This will remove the duplicates.
                 1 = Hypothetically removes the duplicate rows. Does not
                     actually perform the delete, but displays the rows
-		    that would be affected.
+					that would be affected.
 @WithUniques    0 = This is the default. This will check for enforced uniqueness.
                 1 = This will remove all duplicates excluding the unique columns.
 @DatabaseName	Which database is this table stored in? 
-		If NULL, this will use the current database context 
-		from where the procedure is being called.
-@SchemaName	Which schema does this database belong?
-		IF NULL, this will use the default schema of the caller.
-@TableName	The table in which you are attempting to remove duplicate 
+					If NULL, this will use the current database context 
+					from where the procedure is being called.
+@SchemaName		Which schema does this database belong?
+					IF NULL, this will use the default schema of the caller.
+@TableName		The table in which you are attempting to remove duplicate 
                 rows.
 
 MIT License
@@ -112,7 +110,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.'
 ;
-				RETURN;
+				RETURN -1;
 
 			END
 
@@ -124,7 +122,7 @@ SOFTWARE.'
             BEGIN
                 SET @ErrorMsg = CONCAT(N'Database ', @DatabaseName, ' does not exist. Make sure that the name is entered correctly.');
                 RAISERROR(@ErrorMsg, 16, 1);
-                RETURN;
+                RETURN -1;
             END;
 
         IF @DatabaseName IS NULL
@@ -148,7 +146,7 @@ SOFTWARE.'
                 SET @ErrorMsg = CONCAT(N'Invalid object name ''', @SchemaName, N'.', @TableName, N'''.
 The procedure is looking for this object in the ', @DatabaseName, ' database.');
                 RAISERROR(@ErrorMsg, 16, 1);
-                RETURN;
+                RETURN -1;
 
             END;
 
@@ -174,6 +172,7 @@ WHERE S.name = ', QUOTENAME(@SchemaName, ''''), '
                 EXECUTE sp_executesql @Stmt = @Sql,
                                       @params = N'@Exists bit OUTPUT',
                                       @Exists = @Exists OUTPUT;
+
                 IF @Exists = 1
 
                     BEGIN
@@ -181,7 +180,7 @@ WHERE S.name = ', QUOTENAME(@SchemaName, ''''), '
                         DECLARE @Msg nvarchar (256) = CONCAT(N'The object ''', @SchemaName, N'.', @TableName, N''' has enforced uniqueness. No need to remove duplicates. 
 To remove duplicate rows outside of the unique columns, use @WithUniques = 1.');
                         RAISERROR(@Msg, 16, 1);
-                        RETURN;
+                        RETURN -1;
 
                     END;
 
