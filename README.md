@@ -10,7 +10,7 @@ really be careful with @WithUniques = 1.
 
 For instance, let's say we have the following table:
 
-MyDb.dbo.ExampleTable
+### MyDb.dbo.ExampleTable
 
 |LastName|FirstName|
 |--------|---------|
@@ -29,7 +29,7 @@ EXECUTE dbo.usp_DeleteDuplicates @DatabaseName = N'MyDb',
 
 We are now left with:
 
-MyDb.dbo.ExampleTable
+### MyDb.dbo.ExampleTable
 
 |LastName|FirstName|
 |--------|---------|
