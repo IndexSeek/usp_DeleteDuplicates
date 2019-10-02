@@ -134,12 +134,11 @@ SOFTWARE.'
                        @DatabaseName = PARSENAME(@ObjectName, 3);
             END;
 
-        IF DB_ID(@DatabaseName) IS NULL AND @DatabaseName IS NOT NULL
-            BEGIN
-                SET @ErrorMsg = CONCAT(N'Database ', @DatabaseName, ' does not exist. Make sure that the name is entered correctly.');
-                RAISERROR(@ErrorMsg, 16, 1);
-                RETURN -1;
-            END;
+	IF DB_ID(@DatabaseName) IS NULL AND @DatabaseName IS NOT NULL
+		BEGIN
+			RAISERROR(15010, -1, -1, @DatabaseName)
+			RETURN -1;
+		END;
 
         IF @DatabaseName IS NULL
             BEGIN
@@ -158,12 +157,8 @@ SOFTWARE.'
 
         IF OBJECT_ID(CONCAT(@DatabaseName, N'.', @SchemaName, N'.', @TableName), N'U') IS NULL
             BEGIN
-
-                SET @ErrorMsg = CONCAT(N'Invalid object name ''', @SchemaName, N'.', @TableName, N'''.
-The procedure is looking for this object in the ', @DatabaseName, ' database.');
-                RAISERROR(@ErrorMsg, 16, 1);
+                RAISERROR(15009, -1, -1, @ObjectName, @DatabaseName);
                 RETURN -1;
-
             END;
 
 		IF @WithUniques = 0
