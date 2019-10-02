@@ -21,11 +21,11 @@ For instance, let's say we have the following table:
 
 Now let's run our procedure:
 
-<pre>
+```tsql
 EXECUTE dbo.usp_DeleteDuplicates @DatabaseName = N'MyDb',
 				 @SchemaName = N'dbo',
 				 @TableName = N'ExampleTable';
-</pre>
+```
 
 We are now left with:
 
