@@ -12,7 +12,7 @@ IF OBJECT_ID(N'dbo.DemoUniques', N'U') IS NOT NULL
 	DROP TABLE dbo.DemoUniques;
 GO
 
---We need to create the table. This will be a heap for the time being.
+--We need to create the table. This will contain some uniqueness.
 CREATE TABLE dbo.DemoUniques
 (
 	DemoUniquesID int NOT NULL IDENTITY (1, 1)
