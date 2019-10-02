@@ -75,21 +75,21 @@ Minimum Requirements:
 Parameter explanations:
 
 @ObjectName		This requires the name of the object, allows for object
-				pieces. (DatabaseName.SchemaName.TableName)
-@WhatIf         0 = This is the default. This will remove the duplicates.
-                1 = Hypothetically removes the duplicate rows. Does not
-					actually perform the delete, but displays the rows
-					that would be affected.
-@WithUniques    0 = This is the default. This will check for enforced uniqueness.
-				1 = This will remove all duplicates excluding the unique columns.
-@DatabaseName	Which database is this table stored in? 
-				If NULL, this will use the current database context 
-				from where the procedure is being called.
-@SchemaName		Which schema does this database belong?
-				IF NULL, this will use the default schema of the caller.
-@TableName		The table in which you are attempting to remove duplicate 
-				rows.
-
+              pieces. (DatabaseName.SchemaName.TableName)
+@WhatIf       0 = This is the default. This will remove the duplicates.
+              1 = Hypothetically removes the duplicate rows. Does not
+                  actually perform the delete, but displays the rows
+                  that would be affected.
+@WithUniques  0 = This is the default. This will check for enforced uniqueness.
+              1 = This will remove all duplicates excluding the unique columns.
+@DatabaseName Which database is this table stored in? 
+              If NULL, this will use the current database context 
+              from where the procedure is being called.
+@SchemaName   Which schema does this database belong?
+              IF NULL, this will use the default schema of the caller.
+@TableName    The table in which you are attempting to remove duplicate 
+              rows. This is not required if using @ObjectName.
+        
 MIT License
 
 Copyright (c) 2019 B. Tyler White
@@ -194,7 +194,7 @@ WHERE S.name = ', QUOTENAME(@SchemaName, ''''), '
                     BEGIN
 
                         DECLARE @Msg nvarchar (256) = CONCAT(N'The object ''', @SchemaName, N'.', @TableName, N''' has enforced uniqueness. No need to remove duplicates. 
-To remove duplicate rows outside of the unique columns, use @WithUniques = 1.');
+To remove duplicate rows outside of the unique columns, use @WithUniques = 1. Be careful with that one.');
                         RAISERROR(@Msg, 16, 1);
                         RETURN -1;
 
