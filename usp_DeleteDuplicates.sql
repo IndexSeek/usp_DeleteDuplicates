@@ -74,7 +74,7 @@ Minimum Requirements:
 
 Parameter explanations:
 
-@ObjectName		This requires the name of the object, allows for object
+@ObjectName   This requires the name of the object, allows for object
               pieces. (DatabaseName.SchemaName.TableName)
 @WhatIf       0 = This is the default. This will remove the duplicates.
               1 = Hypothetically removes the duplicate rows. Does not
@@ -125,6 +125,7 @@ SOFTWARE.'
            AND @TableName IS NULL
             BEGIN;
                 RAISERROR(N'It looks like you forgot to pass the @ObjectName or @TableName parameter.', 16, 1);
+		RETURN -1;
             END;
 
         IF @ObjectName IS NOT NULL
