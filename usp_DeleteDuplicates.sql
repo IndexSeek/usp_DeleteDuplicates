@@ -79,6 +79,7 @@ Parameter explanations:
 		    that would be affected.
 @WithUniques    0 = This is the default. This will check for enforced uniqueness.
                 1 = This will remove all duplicates excluding the unique columns.
+                    I would really be careful with that one. 
 @DatabaseName	Which database is this table stored in? 
 		If NULL, this will use the current database context 
 		from where the procedure is being called.
