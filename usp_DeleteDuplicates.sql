@@ -179,7 +179,7 @@ WHERE S.name = ', QUOTENAME(@SchemaName, ''''), '
                     BEGIN
 
                         DECLARE @Msg nvarchar (256) = CONCAT(N'The object ''', @SchemaName, N'.', @TableName, N''' has enforced uniqueness. No need to remove duplicates. 
-To remove duplicate rows outside of the unique columns, use @WithUniques = 1.');
+To remove duplicate rows outside of the unique columns, use @WithUniques = 1. Be careful with that one.');
                         RAISERROR(@Msg, 16, 1);
                         RETURN -1;
 
