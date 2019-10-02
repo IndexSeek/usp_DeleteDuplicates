@@ -17,6 +17,7 @@ GO
 --                           to be removed. (@WithUniques parameter)
 -- =========================================================================
 CREATE PROCEDURE [dbo].[usp_DeleteDuplicates]
+	@ObjectName nvarchar (386) = NULL,
 	@Help bit = 0,
 	@WhatIf bit = 0,
 	@WithUniques bit = 0,
@@ -46,12 +47,12 @@ For instance, let''s say we have the following table:
 
 MyDb.dbo.ExampleTable
 
-|LastName |FirstName|
-|---------|---------|
-|Doe      |John     |
-|Doe      |John     |
-|Doe      |Jane     |
-|Doe      |Jane     |
+|LastName|FirstName|
+|--------|---------|
+|Doe     |John     |
+|Doe     |John     |
+|Doe     |Jane     |
+|Doe     |Jane     |
 
 Now let''s run our procedure:
 
@@ -63,29 +64,31 @@ We are now left with:
 
 MyDb.dbo.ExampleTable
 
-|LastName |FirstName|
-|---------|---------|
-|Doe      |John     |
-|Doe      |Jane     |
+|LastName|FirstName|
+|--------|---------|
+|Doe     |John     |
+|Doe     |Jane     |
 
 Minimum Requirements:
 	- Requires at least SQL Server 2005. 
 
 Parameter explanations:
 
+@ObjectName		This requires the name of the object, allows for object
+				pieces. (DatabaseName.SchemaName.TableName)
 @WhatIf         0 = This is the default. This will remove the duplicates.
                 1 = Hypothetically removes the duplicate rows. Does not
-                    actually perform the delete, but displays the rows
-		    that would be affected.
+					actually perform the delete, but displays the rows
+					that would be affected.
 @WithUniques    0 = This is the default. This will check for enforced uniqueness.
-                1 = This will remove all duplicates excluding the unique columns.
+				1 = This will remove all duplicates excluding the unique columns.
 @DatabaseName	Which database is this table stored in? 
-		If NULL, this will use the current database context 
-		from where the procedure is being called.
-@SchemaName	Which schema does this database belong?
-		IF NULL, this will use the default schema of the caller.
-@TableName	The table in which you are attempting to remove duplicate 
-                rows.
+				If NULL, this will use the current database context 
+				from where the procedure is being called.
+@SchemaName		Which schema does this database belong?
+				IF NULL, this will use the default schema of the caller.
+@TableName		The table in which you are attempting to remove duplicate 
+				rows.
 
 MIT License
 
@@ -117,6 +120,19 @@ SOFTWARE.'
         DECLARE @ErrorMsg nvarchar (MAX);
         DECLARE @Exists bit;
         DECLARE @Sql nvarchar (MAX);
+	
+	IF @ObjectName IS NULL
+           AND @TableName IS NULL
+            BEGIN;
+                RAISERROR(N'It looks like you forgot to pass the @ObjectName or @TableName parameter.', 16, 1);
+            END;
+
+        IF @ObjectName IS NOT NULL
+            BEGIN;
+                SELECT @TableName = PARSENAME(@ObjectName, 1),
+                       @SchemaName = PARSENAME(@ObjectName, 2),
+                       @DatabaseName = PARSENAME(@ObjectName, 3);
+            END;
 
         IF DB_ID(@DatabaseName) IS NULL AND @DatabaseName IS NOT NULL
             BEGIN
