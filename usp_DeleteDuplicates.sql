@@ -29,7 +29,7 @@ AS
 
         SET NOCOUNT ON;
 
-		IF @Help = 1 
+		IF @Help = 1
 
 			BEGIN
 
@@ -38,11 +38,11 @@ AS
                           usp_DeleteDuplicates
 ------------------------------------------------------------------------
 
-This procedure removes EXACT duplicate values from a table. The table 
-must not have any enforced unique constraints, as this makes removing 
+This procedure removes EXACT duplicate values from a table. The table
+must not have any enforced unique constraints, as this makes removing
 duplicates unnecessary. If enforced unique constraint(s) exist on the
-table you can remove duplicate rows using @WithUnique = 1. 
-		
+table you can remove duplicate rows using @WithUnique = 1.
+
 For instance, let''s say we have the following table:
 
 MyDb.dbo.ExampleTable
@@ -70,7 +70,7 @@ MyDb.dbo.ExampleTable
 |Doe     |Jane     |
 
 Minimum Requirements:
-	- Requires at least SQL Server 2005. 
+	- Requires at least SQL Server 2005.
 
 Parameter explanations:
 
@@ -82,14 +82,14 @@ Parameter explanations:
                   that would be affected.
 @WithUniques  0 = This is the default. This will check for enforced uniqueness.
               1 = This will remove all duplicates excluding the unique columns.
-@DatabaseName Which database is this table stored in? 
-              If NULL, this will use the current database context 
+@DatabaseName Which database is this table stored in?
+              If NULL, this will use the current database context
               from where the procedure is being called.
 @SchemaName   Which schema does this database belong?
               IF NULL, this will use the default schema of the caller.
-@TableName    The table in which you are attempting to remove duplicate 
+@TableName    The table in which you are attempting to remove duplicate
               rows. This is not required if using @ObjectName.
-        
+
 MIT License
 
 Copyright (c) 2019 B. Tyler White
@@ -120,7 +120,7 @@ SOFTWARE.'
         DECLARE @ErrorMsg nvarchar (MAX);
         DECLARE @Exists bit;
         DECLARE @Sql nvarchar (MAX);
-	
+
 	IF @ObjectName IS NULL
            AND @TableName IS NULL
             BEGIN;
@@ -189,7 +189,7 @@ WHERE S.name = ', QUOTENAME(@SchemaName, ''''), '
 
                     BEGIN
 
-                        DECLARE @Msg nvarchar (256) = CONCAT(N'The object ''', @SchemaName, N'.', @TableName, N''' has enforced uniqueness. No need to remove duplicates. 
+                        DECLARE @Msg nvarchar (256) = CONCAT(N'The object ''', @SchemaName, N'.', @TableName, N''' has enforced uniqueness. No need to remove duplicates.
 To remove duplicate rows outside of the unique columns, use @WithUniques = 1. Be careful with that one.');
                         RAISERROR(@Msg, 16, 1);
                         RETURN -1;
@@ -223,7 +223,7 @@ FOR XML PATH('''')), 1, 2, '''');')
 			END;
 
 		IF @WithUniques = 1
-			
+
 			BEGIN;
 
 				SET @Sql =CONCAT(N'
@@ -309,7 +309,7 @@ WHERE RowNum > 1;');
 
 		DECLARE @Rows bigint;
 		SELECT @Rows = @@ROWCOUNT;
-		
+
 		IF @Rows = 1
 			PRINT CONCAT(CAST(@Rows AS nvarchar (19)), N' row has been removed from ''', @DatabaseName, N'.', @SchemaName,  N'.',  @TableName, N'''.')
 		ELSE
